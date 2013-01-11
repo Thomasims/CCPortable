@@ -14,7 +14,7 @@
 /src/minecraft_server/*
 /src/common/*
 !/src/common/CCPortable/
-!/src/client/CCPortable/
+!/src/minecraft/CCPortable/
 
 *.bat
 *.sh
