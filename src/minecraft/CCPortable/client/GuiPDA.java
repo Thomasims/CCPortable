@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.src.ModLoader;
 
 import org.lwjgl.opengl.GL11;
 
@@ -25,6 +26,7 @@ public class GuiPDA extends GuiScreen
         this.thePDA = nbt;
         this.player = player;
         this.itemStack = iS;
+        this.mc = ModLoader.getMinecraftInstance();
     }
 
     public void initGui()
@@ -74,6 +76,8 @@ public class GuiPDA extends GuiScreen
 
     public void drawScreen(int par1, int par2, float par3)
     {
+    	mc = ModLoader.getMinecraftInstance();
+    	if (this.thePDA == null) { return; }
         int re = mc.renderEngine.getTexture("/CCPortable/PDA.png");
         mc.renderEngine.bindTexture(re);
         int i = (width - 187) / 2;
