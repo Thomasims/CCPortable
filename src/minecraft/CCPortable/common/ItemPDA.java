@@ -58,7 +58,7 @@ public class ItemPDA extends Item {
 				var4.setString("Line" + var3, lines[var3]);
 				var2.appendTag(var4);
 			} else {
-				var4.setString("Line" + var3, "");
+				var4.setString("Line" + var3, "Hello!");
 				var2.appendTag(var4);
 			}
 		}
@@ -78,13 +78,15 @@ public class ItemPDA extends Item {
 			}
 
 			TileEntityPDA tePDA = (TileEntityPDA) world.getBlockTileEntity(x, y, z);
-			if (tePDA.computer != null) {
-				nbt.setString("Channel", tePDA.channel);
-				tePDA.addPDAToList(nbt);
-				nbt.setInteger("RID", tePDA.id);
-				this.computer = tePDA.computer;
-				System.out.println("PDA connected");
-				return iS;
+			if (tePDA != null) {
+				if (tePDA.computer != null) {
+					nbt.setString("Channel", tePDA.channel);
+					tePDA.addPDAToList(nbt);
+					nbt.setInteger("RID", tePDA.id);
+					this.computer = tePDA.computer;
+					System.out.println("PDA connected");
+					return iS;
+				}
 			}
 		}
 		GuiPDA gui = new GuiPDA(iS, player);
