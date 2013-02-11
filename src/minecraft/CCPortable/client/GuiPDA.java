@@ -1,8 +1,14 @@
 package CCPortable.client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.RenderEngine;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,121 +16,153 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.src.ModLoader;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import cpw.mods.fml.relauncher.*;
 
 import CCPortable.common.CCPortable;
+import CCPortable.common.ObjectPDA;
 
-public class GuiPDA extends GuiScreen
-{
-    private NBTTagCompound thePDA;
-    private Minecraft mc;
-	private EntityPlayer player;
-	private ItemStack itemStack;
+@SideOnly(Side.CLIENT)
+public class GuiPDA extends GuiScreen {
+	protected int startXPos;
+	protected int startYPos;
+	protected ObjectPDA pda;
+	protected EntityPlayer player;
+	protected Map lineBuffer = new HashMap();
+	private int id;
+	protected FixedWidthFontRenderer fontRendererer;
 
-    public GuiPDA(ItemStack iS, EntityPlayer player)
-    {
-        NBTTagCompound nbt = iS.getTagCompound();
-        this.thePDA = nbt;
-        this.player = player;
-        this.itemStack = iS;
-        this.mc = ModLoader.getMinecraftInstance();
-    }
+	public GuiPDA(int id, EntityPlayer ply) {
+		this.id = id;
+		this.player = ply;
+		this.pda = (ObjectPDA) CCPortable.allPDAs.get(id);
+		this.fontRendererer = new FixedWidthFontRenderer(this.mc.gameSettings, "/font/default.png", this.mc.renderEngine);
+	}
 
-    public void initGui()
-    {
-        controlList.clear();
-        int i = (width - 187) / 2;
-        int k = (height - 256) / 2;
-        controlList.add(new GuiButton(2, i + 35, k + 239, 60, 14, "Disconnect"));
+	/**
+	 * Adds the buttons (and other controls) to the screen in question.
+	 */
+	public void initGui() {
+		super.initGui();
+		controlList.clear();
+		int i = width / 4 - (187 / 4);
+		int k = height / 4 - (256 / 4);
+		controlList
+				.add(new GuiButton(2, i + 35, k + 239, 60, 14, "Disconnect"));
+		this.startXPos = i;
+		this.startYPos = k;
+		this.doEvent("pda_open", new Object[] {});
+	}
 
-        //this.itemStack.doEvent("pda_open", new Object[] { this.thePDA.id });
-    }
+	/**
+	 * Draws the screen and all the components in it.
+	 */
+	public void drawScreen(int par1, int par2, float par3) {
+		this.drawDefaultBackground();
+		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		super.drawScreen(par1, par2, par3);
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float) this.startXPos, (float) this.startYPos, 0.0F);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 
-    protected void mouseClicked(int x, int y, int par3)
-    {
-        int i = (width - 163) / 2;
-        int k = (height - 244) / 2;
-        if(x > i && x < ((width + 163) / 2) && y > k && y < ((height + 244) / 2)) {
-            int charX = (int) ((double) ((x-i)/163*27)+1);
-            int charY = (int) ((double) ((y-k)/244*21)+1);
-            //this.thePDA.doEvent("pda_touch", new Object[] { this.thePDA.id, charX, charY });
-        }
-    }
+		String texture = "";
+		try {
+			texture = this.pda.texture;
+		} catch (Exception e) {
+		}
+		this.mc.renderEngine.bindTexture(this.mc.renderEngine
+				.getTexture(texture));
+		this.drawTexturedModalRect(this.startXPos, this.startYPos, 0, 0, 187,
+				256);
 
-    protected void actionPerformed(GuiButton par1GuiButton)
-    {
-        switch (par1GuiButton.id)
-        {
-            default:
-                break;
-            case 1:
-                this.thePDA.setString("Channel","N/A");
-                this.mc.displayGuiScreen(null);
-                CCPortable.getReceiver(thePDA.getInteger("RID")).tagList[thePDA.getInteger("ID")] = null;
-        }
-    }
+		GL11.glPopMatrix();
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		RenderHelper.enableStandardItemLighting();
+	}
 
-    public void updateScreen()
-    {
-        super.updateScreen();
-        int i = this.mc.renderEngine.getTexture("/CCPortable/pda.png");
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture(i);
-        int j = (width - 187) / 2;
-        int k = (height - 256) / 2;
-        drawTexturedModalRect(j, k, 0, 0, 187, 256);
-    }
+	/**
+	 * Called when the mouse is clicked. par1 - x par2 - y par3 - button
+	 */
+	protected void mouseClicked(int par1, int par2, int par3) {
+		super.mouseClicked(par1, par2, par3);
+		System.out.println(par1 + ";" + par2 + ";" + par3);
+		this.doEvent("mouse_click", new Object[] { par1, par2, par3 });
+	}
 
-    public void drawScreen(int par1, int par2, float par3)
-    {
-    	mc = ModLoader.getMinecraftInstance();
-    	if (this.thePDA == null) { return; }
-        int re = mc.renderEngine.getTexture("/CCPortable/PDA.png");
-        mc.renderEngine.bindTexture(re);
-        int i = (width - 187) / 2;
-        int k = (height - 256) / 2;
-        drawTexturedModalRect(i,k,0,0,187,256);
-        if (this.thePDA.getInteger("Icon") > 0) {
-            drawTexturedModalRect(i + 164, k + 8, 187, 10 * (this.thePDA.getInteger("Icon") - 1), 14, 10);
-        }
-        if (this.thePDA.getInteger("Charge") > 0) {
-            int chargeIcon = (int)(this.thePDA.getInteger("Charge")/1000);
-            drawTexturedModalRect(i + 150, k + 8, 201, 10 * (chargeIcon - 1), 14, 10);
-        }
-        String guiTitle = "";
-        if ((this.thePDA.getString("Title") == null) || (this.thePDA.getString("Title") == ""))
-            guiTitle = "No title.";
-        else
-            guiTitle = this.thePDA.getString("Title");
-        drawString(fontRenderer, guiTitle, i + 10, k + 10, 0xffffff);
-        int c = k + 24;
-        FixedWidthFontRenderer fontRenderer = new FixedWidthFontRenderer(mc.gameSettings, "/font/default.png", mc.renderEngine);
-        for (int i1 = 0; i1<=21; i1++) {
-        	NBTTagList var2 = this.thePDA.getTagList("Lines");
-        	NBTTagCompound var4 = (NBTTagCompound)var2.tagAt(i1);
-            String s = var4.getString("Line"+i1);
-            fontRenderer.drawString(s, i1 + 12, c, 0xffffff);
-            c += 10;
-        }
-        super.drawScreen(par1, par2, par3);
-    }
+	/**
+	 * Fired when a key is typed. This is the equivalent of
+	 * KeyListener.keyTyped(KeyEvent e).
+	 */
+	protected void keyTyped(char par1, int par2) {
+		if (par2 == 1) {
+			this.mc.thePlayer.closeScreen();
+		}
+		this.doEvent("key", new Object[] { par2 });
+		this.doEvent("char", new Object[] { par1 });
+	}
 
-    public boolean doesGuiPauseGame()
-    {
-        return false;
-    }
+	/**
+	 * Called when the screen is unloaded. Used to disable keyboard repeat
+	 * events
+	 */
+	public void onGuiClosed() {
+		this.doEvent("pda_closed", new Object[] {});
+	}
 
-    protected void keyTyped(char par1, int par2)
-    {
-        super.keyTyped(par1, par2);
-        /*
-        if (xn.a(par1)) {
-            this.thePDA.doEvent("pda_char", new Object[] { this.thePDA.id, par1 });
-            this.thePDA.doEvent("pda_key", new Object[] { this.thePDA.id, par2 });
-    	}
-    	*/
-        if(par2 == 1)
-        {
-            mc.displayGuiScreen(null);
-        }
-    }
+	public void doEvent(String name, Object[] args) {
+		try {
+			int rID = this.pda.receiver;
+			Object receiver = CCPortable.allReceivers.get(rID);
+			if (receiver != null) {
+				CCPortable.doEvent(rID, name, args);
+			}
+		} catch (Exception e) {
+		}
+	}
+
+	/**
+	 * Returns true if this GUI should pause the game when it is displayed in
+	 * single-player
+	 */
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
+
+	/**
+	 * Called from the main game loop to update the screen.
+	 */
+	public void updateScreen() {
+		super.updateScreen();
+		if (this.checkChanges()) {
+			for (int i = 0; i < this.pda.lineNumber; i++) {
+				String line = (String) this.lineBuffer.get(i);
+				int startX = this.startXPos + 9;
+				int startY = this.startYPos + 1 + i * 10;
+				this.fontRendererer.drawString(line, startX, startY, 0xFFFFFF);
+			}
+		}
+	}
+
+	public boolean checkChanges() {
+		Map nbtl = new HashMap();
+		try {
+			nbtl = ((ObjectPDA) CCPortable.allPDAs.get(this.id)).lines;
+		} catch (Exception e) {}
+		boolean right = false;
+		for (int i = 0; i < this.pda.lineNumber; i++) {
+			try {
+				String line = (String) nbtl.get(i);
+				if (this.lineBuffer.get(i) != line) {
+					this.lineBuffer.put(i, line);
+					right = true;
+				}
+			} catch (Exception e) {}
+		}
+		return right;
+	}
 }

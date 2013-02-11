@@ -12,8 +12,6 @@ import net.minecraft.world.World;
 
 public class BlockReceiver extends Block
 {
-    public int IDs;
-	private int ID;
 	private int side;
     public BlockReceiver(int i, int j, Material material)
     {
@@ -39,40 +37,11 @@ public class BlockReceiver extends Block
 
     public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
-    	ID++;
-    	CCPortable.saveReceiver(true, ID, (TileEntityPDA)world.getBlockTileEntity(x,y,z));
     	if (!world.setBlockAndMetadataWithNotify(x, y, z, this.blockID, side))
     		return false;
 
     	world.setBlockAndMetadataWithNotify(x, y, z, this.blockID, side);
-    	this.side = side;
-		float n1 = 0.0F;
-		float n2 = 0.2F;
-		float n3 = 0.8F;
-		float n4 = 1.0F;
-		switch(side)
-		{
-		case 0:
-			this.setBlockBounds(n3,n4,n3,n2,n3,n2);
-			break;
-		case 1:
-			this.setBlockBounds(n3,n1,n3,n2,n2,n2);
-			break;
-		case 2:
-			this.setBlockBounds(n3,n4,n3,n2,n3,n2);
-			break;
-		case 3:
-			this.setBlockBounds(n3,n1,n3,n2,n2,n2);
-			break;
-		case 4:
-			this.setBlockBounds(n3,n4,n3,n2,n3,n2);
-			break;
-		case 5:
-			this.setBlockBounds(n3,n1,n3,n2,n2,n2);
-			break;
-		default:
-			this.setBlockBounds(n1,n1,n1,n4,n4,n4);
-		}
+		this.setBlockBounds(1F,1F,1F,1F,1F,1F);
         return true;
     }
 
@@ -95,7 +64,7 @@ public class BlockReceiver extends Block
     {
     	try
     	{
-    		return (TileEntity) new TileEntityPDA(this,ID);
+    		return (TileEntity) new TileEntityPDA();
     	}
     	catch (Exception var3)
     	{

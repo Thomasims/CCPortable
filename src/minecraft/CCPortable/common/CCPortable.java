@@ -3,6 +3,7 @@ package CCPortable.common;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
@@ -21,13 +22,17 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import java.util.*;
 
 @Mod(modid = "CCPortable", name = "CCPortable", version = "0.3")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {
 		"CSPortablekcev", "CSPortabledr", "SCPortablerd", "CSPortablepdc" }, packetHandler = PacketHandler.class)
 public class CCPortable {
-	public static ItemStack[] allPDAs = new ItemStack[256];
-	public static TileEntityPDA[] allReceivers = new TileEntityPDA[256];
+	public static Map allPDAs = new HashMap();
+	public static Map allReceivers = new HashMap();
+	public static Map allPLYs = new HashMap();
+	public static int lastPDA = 0;
+	public static int lastREC = 0;
 	static EnumToolMaterial pdaMaterial = EnumHelper.addToolMaterial(
 			"pdaMaterial", 0, -1, 2F, 2, 14);
 	public static Block receiverBlock;
@@ -80,23 +85,13 @@ public class CCPortable {
 		GameRegistry.addRecipe(new ItemStack(CCPortable.pdaBattery),
 				new Object[] { " R ", "IGI", " R ", 'R', Item.redstone, 'I',
 						Item.ingotIron, 'G', Item.ingotGold });
-		
+
 		pdaItem = (new ItemPDA(PDAID)).setIconIndex(16).setItemName("pdaItem");
 		LanguageRegistry.addName(pdaItem, "PDA");
 		GameRegistry.addRecipe(new ItemStack(CCPortable.pdaItem), new Object[] {
 				" X ", "ITI", "BPB", 'X', Block.torchRedstoneActive, 'I',
 				Item.ingotIron, 'T', CCPortable.touchScreen, 'B',
 				Block.stoneButton, 'P', CCPortable.pdaBattery });
-
-		pdaHelmet = new ItemPDAHelmet(PDAHelmetID, helmetMat,
-				ModLoader.addArmor("PDAHelmet"), 0).setItemName("PDAHelm")
-				.setIconIndex(19);
-		LanguageRegistry.addName(pdaHelmet, "PDA Vision");
-		GameRegistry.addRecipe(new ItemStack(CCPortable.pdaHelmet),
-				new Object[] { " T ", "GPG", "IDI", 'T',
-						Block.torchRedstoneActive, 'P', CCPortable.pdaItem,
-						'G', Block.glass, 'I', Item.ingotIron, 'D',
-						Item.diamond });
 
 		receiverBlock = new BlockReceiver(ReceiverID, 0, Material.rock)
 				.setStepSound(Block.soundStoneFootstep).setHardness(5F)
@@ -112,31 +107,30 @@ public class CCPortable {
 		proxy.registerRenderThings();
 	}
 
-	public static ItemStack getPDA(int i) {
-		if (allPDAs[i] == null)
-			return null;
-		return allPDAs[i];
-	}
-
-	public static void savePDA(boolean addorrem, int id, ItemStack iS) {
-		if (addorrem) {
-			allPDAs[id] = iS;
-			return;
+	public static boolean check(int id, boolean pda) {
+		if (pda) {
+			return (allPDAs.get(id) != null);
+		} else {
+			return (allReceivers.get(id) != null);
 		}
-		allPDAs[id] = null;
 	}
 
-	public static TileEntityPDA getReceiver(int i) {
-		if (allReceivers[i] == null)
-			return null;
-		return allReceivers[i];
+	public static int createPDA(ObjectPDA inte, EntityPlayer ply) {
+		allPDAs.put(lastPDA, inte);
+		allPLYs.put(lastPDA, ply);
+		lastPDA++;
+		return lastPDA - 1;
 	}
 
-	public static void saveReceiver(boolean addorrem, int id, TileEntityPDA iS) {
-		if (addorrem) {
-			allReceivers[id] = iS;
-			return;
-		}
-		allReceivers[id] = null;
+	public static int createReceiver(TileEntityPDA rec) {
+		allReceivers.put(lastREC, rec);
+		lastREC++;
+		return lastREC - 1;
+	}
+
+	public static void doEvent(int id, String name, Object[] args) {
+		ObjectPDA item = (ObjectPDA) allPDAs.get(id);
+	    item.doEvent(name, args);
+		allPDAs.put(id, item);
 	}
 }
