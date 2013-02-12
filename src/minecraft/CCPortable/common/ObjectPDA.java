@@ -11,10 +11,21 @@ public class ObjectPDA {
     public int lineNumber;
     public int lineLength;
     public int receiver;
+    public int offX;
+    public int offY;
+    public int textureX;
+    public int textureY;
     public IComputerAccess computer;
     public String texture;
 
-    public ObjectPDA() {
+    public ObjectPDA(String texture, int sizeX, int sizeY, int textureX, int textureY, int offX, int offY) {
+    	this.texture = texture;
+    	this.lineNumber = sizeY;
+    	this.lineLength = sizeX;
+    	this.offX = offX;
+    	this.offY = offY;
+    	this.textureX = textureX;
+    	this.textureY = textureY;
         this.cursorX = 1;
         this.cursorY = 1;
         for (int i = 0; i < lineNumber; i++) {

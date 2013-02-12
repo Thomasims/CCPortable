@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,7 @@ import dan200.computer.api.IComputerAccess;
 
 public class ItemPDA extends Item {
 
+	private int checkCoolDown = 0;
 	public ItemPDA(int i) {
 		super(i);
 		maxStackSize = 1;
@@ -26,7 +28,7 @@ public class ItemPDA extends Item {
 	}
 
 	public void onCreated(ItemStack iS, World world, EntityPlayer player) {
-	    int id = CCPortable.createPDA(new ObjectPDA(), player);
+	    int id = CCPortable.createPDA(new ObjectPDA("/CCPortable/pda.png", 23, 21, 187, 256, 9, 10), player);
 	    NBTTagCompound nbt = new NBTTagCompound();
 	    nbt.setInteger("RID", 0);
 	    nbt.setInteger("ID", id);
@@ -60,5 +62,29 @@ public class ItemPDA extends Item {
 	
 	public void openGUI(int id, EntityPlayer player) {
 		FMLCommonHandler.instance().showGuiScreen(new GuiPDA(id, player));
+	}
+	
+	public void onUpdate(ItemStack iS, World world, Entity ply, int par4, boolean par5) {
+		this.checkCoolDown++;
+		if (this.checkCoolDown > 100) {
+			if(iS.getTagCompound() == null) {
+				int id = CCPortable.createPDA(new ObjectPDA("/CCPortable/pda.png", 23, 21, 187, 256, 9, 10), (EntityPlayer) ply);
+				NBTTagCompound nbt = new NBTTagCompound();
+				nbt.setInteger("ID", id);
+				nbt.setInteger("RID",  0);
+				iS.setTagCompound(nbt);
+			}
+			
+			NBTTagCompound nbt = iS.getTagCompound();
+			ObjectPDA toU = (ObjectPDA) CCPortable.allPDAs.get(nbt.getInteger("RID"));
+			if (CCPortable.allPDAs.get(nbt.getInteger("ID")) == null) {
+				ObjectPDA pda = new ObjectPDA("/CCPortable/pda.png", 23, 21, 187, 256, 9, 10);
+				pda.receiver = nbt.getInteger("RID");
+				CCPortable.allPDAs.put(nbt.getInteger("ID"), pda);
+			}
+			int rID = toU.receiver;
+			nbt.setInteger("RID", rID);
+			this.checkCoolDown = 0;
+		}
 	}
 }

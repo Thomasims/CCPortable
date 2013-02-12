@@ -44,8 +44,8 @@ public class GuiPDA extends GuiScreen {
 	public void initGui() {
 		super.initGui();
 		controlList.clear();
-		int i = width / 4 - (187 / 4);
-		int k = height / 4 - (256 / 4);
+		int i = width / 4 - (this.pda.textureX / 4);
+		int k = height / 4 - (this.pda.textureY / 4);
 		controlList
 				.add(new GuiButton(2, i + 35, k + 239, 60, 14, "Disconnect"));
 		this.startXPos = i;
@@ -139,8 +139,8 @@ public class GuiPDA extends GuiScreen {
 		if (this.checkChanges()) {
 			for (int i = 0; i < this.pda.lineNumber; i++) {
 				String line = (String) this.lineBuffer.get(i);
-				int startX = this.startXPos + 9;
-				int startY = this.startYPos + 1 + i * 10;
+				int startX = this.startXPos + this.pda.offX;
+				int startY = this.startYPos + this.pda.offY-9 + i * 10;
 				this.fontRenderer.drawString(line, startX, startY, 0xFFFFFF);
 			}
 		}
