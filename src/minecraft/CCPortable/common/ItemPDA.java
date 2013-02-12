@@ -35,7 +35,7 @@ public class ItemPDA extends Item {
 
 	public boolean onItemUseFirst(ItemStack iS, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)  {
 		if (iS.getTagCompound() == null)
-		    this.onCreated(iS, world, player);
+		    return false;
 		NBTTagCompound nbt = iS.getTagCompound();
 		int id = nbt.getInteger("ID");
 		if (world.getBlockId(x, y, z) == CCPortable.ReceiverID) {

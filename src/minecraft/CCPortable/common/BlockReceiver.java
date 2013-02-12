@@ -45,30 +45,13 @@ public class BlockReceiver extends Block
         return true;
     }
 
-    public boolean renderAsNormalBlock()
-    {
-	return false;
-    }
-
-    public boolean isOpaqueCube()
-    {
-    	return false;
-    }
-
     public boolean hasTileEntity(int metadata)
     {
     	return true;
     }
 
-    public TileEntity createNewTileEntity(World par1World)
+    public TileEntity createTileEntity(World world, int metadata)
     {
-    	try
-    	{
-    		return (TileEntity) new TileEntityPDA();
-    	}
-    	catch (Exception var3)
-    	{
-    		throw new RuntimeException(var3);
-    	}
+    	return (TileEntity) new TileEntityPDA();
     }
 }

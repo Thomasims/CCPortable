@@ -57,21 +57,16 @@ public class CCPortable {
 		Configuration config = new Configuration(
 				event.getSuggestedConfigurationFile());
 		config.load();
-		int ReceiverID = config.getBlock("Receiver ID", 145).getInt();
-		int PDAID = config.getItem("Item PDA ID", 550).getInt();
-		int TouchScreenID = config.getItem("TouchScreen ID", 552).getInt();
-		int PDABatteryID = config.getItem("Battery ID", 554).getInt();
-		int PDAHelmetID = config.getItem("Helmet ID", 556).getInt();
+		ReceiverID = config.getBlock("Receiver ID", 145).getInt();
+		PDAID = config.getItem("Item PDA ID", 550).getInt();
+		TouchScreenID = config.getItem("TouchScreen ID", 552).getInt();
+		PDABatteryID = config.getItem("Battery ID", 554).getInt();
+		PDAHelmetID = config.getItem("Helmet ID", 556).getInt();
 		config.save();
 	}
 
 	@Init
 	public void load(FMLInitializationEvent event) {
-		ReceiverID = 159;
-		PDAID = 501;
-		TouchScreenID = 502;
-		PDABatteryID = 503;
-		PDAHelmetID = 504;
 		touchScreen = (new ItemPDAPart(TouchScreenID)).setIconIndex(17)
 				.setItemName("touchScreen");
 		LanguageRegistry.addName(touchScreen, "TouchScreen");

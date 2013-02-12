@@ -31,13 +31,11 @@ public class GuiPDA extends GuiScreen {
 	protected EntityPlayer player;
 	protected Map lineBuffer = new HashMap();
 	private int id;
-	protected FixedWidthFontRenderer fontRendererer;
 
 	public GuiPDA(int id, EntityPlayer ply) {
 		this.id = id;
 		this.player = ply;
 		this.pda = (ObjectPDA) CCPortable.allPDAs.get(id);
-		this.fontRendererer = new FixedWidthFontRenderer(this.mc.gameSettings, "/font/default.png", this.mc.renderEngine);
 	}
 
 	/**
@@ -143,18 +141,20 @@ public class GuiPDA extends GuiScreen {
 				String line = (String) this.lineBuffer.get(i);
 				int startX = this.startXPos + 9;
 				int startY = this.startYPos + 1 + i * 10;
-				this.fontRendererer.drawString(line, startX, startY, 0xFFFFFF);
+				this.fontRenderer.drawString(line, startX, startY, 0xFFFFFF);
 			}
 		}
 	}
 
 	public boolean checkChanges() {
 		Map nbtl = new HashMap();
+		int num = 0;
 		try {
 			nbtl = ((ObjectPDA) CCPortable.allPDAs.get(this.id)).lines;
+			num = this.pda.lineNumber;
 		} catch (Exception e) {}
 		boolean right = false;
-		for (int i = 0; i < this.pda.lineNumber; i++) {
+		for (int i = 0; i < num; i++) {
 			try {
 				String line = (String) nbtl.get(i);
 				if (this.lineBuffer.get(i) != line) {
