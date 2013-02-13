@@ -67,6 +67,7 @@ public class ItemPDA extends Item {
 	public void onUpdate(ItemStack iS, World world, Entity ply, int par4, boolean par5) {
 		this.checkCoolDown++;
 		if (this.checkCoolDown > 100) {
+			try {
 			if(iS.getTagCompound() == null) {
 				int id = CCPortable.createPDA(new ObjectPDA("/CCPortable/pda.png", 23, 21, 187, 256, 9, 10), (EntityPlayer) ply);
 				NBTTagCompound nbt = new NBTTagCompound();
@@ -76,7 +77,7 @@ public class ItemPDA extends Item {
 			}
 			
 			NBTTagCompound nbt = iS.getTagCompound();
-			ObjectPDA toU = (ObjectPDA) CCPortable.allPDAs.get(nbt.getInteger("RID"));
+			ObjectPDA toU = (ObjectPDA) CCPortable.allPDAs.get(nbt.getInteger("ID"));
 			if (CCPortable.allPDAs.get(nbt.getInteger("ID")) == null) {
 				ObjectPDA pda = new ObjectPDA("/CCPortable/pda.png", 23, 21, 187, 256, 9, 10);
 				pda.receiver = nbt.getInteger("RID");
@@ -84,7 +85,11 @@ public class ItemPDA extends Item {
 			}
 			int rID = toU.receiver;
 			nbt.setInteger("RID", rID);
-			this.checkCoolDown = 0;
+			} catch (Exception e) {
+				System.out.println("PDA bugged");
+			} finally {
+				this.checkCoolDown = 0;
+			}
 		}
 	}
 }

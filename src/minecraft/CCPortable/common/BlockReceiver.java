@@ -12,7 +12,6 @@ import net.minecraft.world.World;
 
 public class BlockReceiver extends Block
 {
-	private int side;
     public BlockReceiver(int i, int j, Material material)
     {
     	super(i, j, material);
@@ -25,33 +24,15 @@ public class BlockReceiver extends Block
 	    return "/CCPortable/Textures.png";
     }
 
-    public int quantityDropped(Random par1Random)
-    {
-    	return 1;
-    }
-
-    public int getSide()
-    {
-    	return this.side;
-    }
-
-    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
-    {
-    	if (!world.setBlockAndMetadataWithNotify(x, y, z, this.blockID, side))
-    		return false;
-
-    	world.setBlockAndMetadataWithNotify(x, y, z, this.blockID, side);
-		this.setBlockBounds(1F,1F,1F,1F,1F,1F);
-        return true;
-    }
-
-    public boolean hasTileEntity(int metadata)
+    /*public boolean hasTileEntity(int metadata)
     {
     	return true;
-    }
+    }*/
 
-    public TileEntity createTileEntity(World world, int metadata)
+    public TileEntity createTileEntity(World world)
     {
-    	return (TileEntity) new TileEntityPDA();
+    	TileEntityPDA tP = new TileEntityPDA();
+    	tP.id = CCPortable.createReceiver(tP);
+    	return tP;
     }
 }

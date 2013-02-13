@@ -92,7 +92,7 @@ public class CCPortable {
 				.setStepSound(Block.soundStoneFootstep).setHardness(5F)
 				.setResistance(5.0F).setBlockName("receiverBlock");
 		LanguageRegistry.addName(receiverBlock, "Receiver");
-		GameRegistry.registerBlock(receiverBlock);
+		GameRegistry.registerBlock(receiverBlock, "CCPortable");
 		GameRegistry.addRecipe(new ItemStack(CCPortable.receiverBlock),
 				new Object[] { " T ", "SGS", "SRS", 'T',
 						Block.torchRedstoneActive, 'S', Block.stone, 'G',
