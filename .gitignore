@@ -8,6 +8,7 @@
 /logs/*
 /runtime/*
 /temp/*
+/reobf/*
 
 /src/minecraft/*
 /src/minecraft_server/*
