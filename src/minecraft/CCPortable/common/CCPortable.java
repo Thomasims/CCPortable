@@ -24,17 +24,15 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import java.util.*;
 
-@Mod(modid = "CCPortable", name = "CCPortable", version = "0.3")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {
-		"CSPortablekcev", "CSPortabledr", "SCPortablerd", "CSPortablepdc" }, packetHandler = PacketHandler.class)
+@Mod(modid = "CCPortable", name = "CCPortable", version = "0.3", dependencies = "required-after:ComputerCraft;after:CCTurtle")
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"CSPortablekcev", "CSPortabledr", "SCPortablerd", "CSPortablepdc" }, packetHandler = PacketHandler.class)
 public class CCPortable {
 	public static Map allPDAs = new HashMap();
 	public static Map allReceivers = new HashMap();
 	public static Map allPLYs = new HashMap();
 	public static int lastPDA = 0;
 	public static int lastREC = 0;
-	static EnumToolMaterial pdaMaterial = EnumHelper.addToolMaterial(
-			"pdaMaterial", 0, -1, 2F, 2, 14);
+	static EnumToolMaterial pdaMaterial = EnumHelper.addToolMaterial("pdaMaterial", 0, -1, 2F, 2, 14);
 	public static Block receiverBlock;
 	public static Item pdaItem;
 	public static Item touchScreen;
@@ -49,8 +47,6 @@ public class CCPortable {
 	public static CCPortable instance;
 	@SidedProxy(clientSide = "CCPortable.client.ClientProxy", serverSide = "CCPortable.common.CommonProxy")
 	public static CommonProxy proxy;
-	static EnumArmorMaterial helmetMat = EnumHelper.addArmorMaterial(
-			"PDAArmor", 35, new int[] { 0, 0, 0, 0 }, 0);
 
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {

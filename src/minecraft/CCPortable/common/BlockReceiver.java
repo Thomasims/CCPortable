@@ -24,12 +24,12 @@ public class BlockReceiver extends Block
 	    return "/CCPortable/Textures.png";
     }
 
-    /*public boolean hasTileEntity(int metadata)
+    public boolean hasTileEntity(int metadata)
     {
     	return true;
-    }*/
+    }
 
-    public TileEntity createTileEntity(World world)
+    public TileEntity createTileEntity(World world, int metadata)
     {
     	TileEntityPDA tP = new TileEntityPDA();
     	tP.id = CCPortable.createReceiver(tP);
