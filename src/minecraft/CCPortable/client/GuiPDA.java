@@ -44,8 +44,12 @@ public class GuiPDA extends GuiScreen {
 	public void initGui() {
 		super.initGui();
 		controlList.clear();
-		int i = width / 4 - (this.pda.textureX / 4);
-		int k = height / 4 - (this.pda.textureY / 4);
+		int i = 0;
+		int k = 0;
+		try {
+			i = width / 2 - (this.pda.textureX / 2);
+			k = height / 2 - (this.pda.textureY / 2);
+		} catch (Exception e) {}
 		controlList
 				.add(new GuiButton(2, i + 35, k + 239, 60, 14, "Disconnect"));
 		this.startXPos = i;
@@ -58,14 +62,7 @@ public class GuiPDA extends GuiScreen {
 	 */
 	public void drawScreen(int par1, int par2, float par3) {
 		this.drawDefaultBackground();
-		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		super.drawScreen(par1, par2, par3);
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) this.startXPos, (float) this.startYPos, 0.0F);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 
 		String texture = "";
 		try {
@@ -76,11 +73,14 @@ public class GuiPDA extends GuiScreen {
 				.getTexture(texture));
 		this.drawTexturedModalRect(this.startXPos, this.startYPos, 0, 0, 187,
 				256);
-
-		GL11.glPopMatrix();
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		RenderHelper.enableStandardItemLighting();
+		if (!this.checkChanges()) {
+			for (int i = 0; i < this.pda.lineNumber; i++) {
+				String line = (String) this.lineBuffer.get(i);
+				int startX = this.startXPos + this.pda.offX;
+				int startY = this.startYPos + this.pda.offY + i * 10;
+				this.fontRenderer.drawString(line, startX, startY, 0xFFFFFF);
+			}
+		}
 	}
 
 	/**
@@ -129,21 +129,6 @@ public class GuiPDA extends GuiScreen {
 	 */
 	public boolean doesGuiPauseGame() {
 		return false;
-	}
-
-	/**
-	 * Called from the main game loop to update the screen.
-	 */
-	public void updateScreen() {
-		super.updateScreen();
-		if (this.checkChanges()) {
-			for (int i = 0; i < this.pda.lineNumber; i++) {
-				String line = (String) this.lineBuffer.get(i);
-				int startX = this.startXPos + this.pda.offX;
-				int startY = this.startYPos + this.pda.offY-9 + i * 10;
-				this.fontRenderer.drawString(line, startX, startY, 0xFFFFFF);
-			}
-		}
 	}
 
 	public boolean checkChanges() {

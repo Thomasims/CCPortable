@@ -25,7 +25,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import java.util.*;
 
 @Mod(modid = "CCPortable", name = "CCPortable", version = "0.3", dependencies = "required-after:ComputerCraft;after:CCTurtle")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"CSPortablekcev", "CSPortabledr", "SCPortablerd", "CSPortablepdc" }, packetHandler = PacketHandler.class)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"CCPortable" }, packetHandler = PacketHandler.class)
 public class CCPortable {
 	public static Map allPDAs = new HashMap();
 	public static Map allReceivers = new HashMap();
@@ -108,7 +108,10 @@ public class CCPortable {
 
 	public static int createPDA(ObjectPDA inte, EntityPlayer ply) {
 		allPDAs.put(lastPDA, inte);
-		allPLYs.put(lastPDA, ply);
+			ObjectPDA pda = (ObjectPDA) allPDAs.get(lastPDA);
+			pda.id = lastPDA;
+			allPDAs.put(lastPDA, pda);
+		allPLYs.put(lastPDA, ply.username);
 		lastPDA++;
 		return lastPDA - 1;
 	}

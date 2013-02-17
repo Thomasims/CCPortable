@@ -1,6 +1,8 @@
 package CCPortable.common;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.creativetab.CreativeTabs;
@@ -28,7 +30,7 @@ public class ItemPDA extends Item {
 	}
 
 	public void onCreated(ItemStack iS, World world, EntityPlayer player) {
-	    int id = CCPortable.createPDA(new ObjectPDA("/CCPortable/pda.png", 23, 21, 187, 256, 9, 10), player);
+	    int id = CCPortable.createPDA(new ObjectPDA("/CCPortable/pda.png", 23, 22, 187, 256, 9, 10), player);
 	    NBTTagCompound nbt = new NBTTagCompound();
 	    nbt.setInteger("RID", 0);
 	    nbt.setInteger("ID", id);
@@ -56,10 +58,13 @@ public class ItemPDA extends Item {
 			    world.setBlockTileEntity(x, y, z, tePDA);
 			}
 		}
-		this.openGUI(id, player);
+		if (world.isRemote) {
+			this.openGUI(id, player);
+		}
 		return true;
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public void openGUI(int id, EntityPlayer player) {
 		FMLCommonHandler.instance().showGuiScreen(new GuiPDA(id, player));
 	}
@@ -69,7 +74,7 @@ public class ItemPDA extends Item {
 		if (this.checkCoolDown > 100) {
 			try {
 			if(iS.getTagCompound() == null) {
-				int id = CCPortable.createPDA(new ObjectPDA("/CCPortable/pda.png", 23, 21, 187, 256, 9, 10), (EntityPlayer) ply);
+				int id = CCPortable.createPDA(new ObjectPDA("/CCPortable/pda.png", 23, 22, 187, 256, 9, 10), (EntityPlayer) ply);
 				NBTTagCompound nbt = new NBTTagCompound();
 				nbt.setInteger("ID", id);
 				nbt.setInteger("RID",  0);
@@ -79,7 +84,7 @@ public class ItemPDA extends Item {
 			NBTTagCompound nbt = iS.getTagCompound();
 			ObjectPDA toU = (ObjectPDA) CCPortable.allPDAs.get(nbt.getInteger("ID"));
 			if (CCPortable.allPDAs.get(nbt.getInteger("ID")) == null) {
-				ObjectPDA pda = new ObjectPDA("/CCPortable/pda.png", 23, 21, 187, 256, 9, 10);
+				ObjectPDA pda = new ObjectPDA("/CCPortable/pda.png", 23, 22, 187, 256, 9, 10);
 				pda.receiver = nbt.getInteger("RID");
 				CCPortable.allPDAs.put(nbt.getInteger("ID"), pda);
 			}
@@ -90,6 +95,10 @@ public class ItemPDA extends Item {
 			} finally {
 				this.checkCoolDown = 0;
 			}
+		}
+		if(iS.getTagCompound() != null) {
+			NBTTagCompound nbt = iS.getTagCompound();
+			CCPortable.allPLYs.put(nbt.getInteger("ID"), ((EntityPlayer)ply).username);
 		}
 	}
 }
