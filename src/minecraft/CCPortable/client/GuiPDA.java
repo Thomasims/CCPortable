@@ -21,21 +21,22 @@ import org.lwjgl.opengl.GL12;
 import cpw.mods.fml.relauncher.*;
 
 import CCPortable.common.CCPortable;
-import CCPortable.common.ObjectPDA;
+import CCPortable.common.PDAFrequency;
+import CCPortable.common.ItemPDA;
 
 @SideOnly(Side.CLIENT)
 public class GuiPDA extends GuiScreen {
 	protected int startXPos;
 	protected int startYPos;
-	protected ObjectPDA pda;
-	protected EntityPlayer player;
+	protected PDAFrequency pda;
+	protected ItemStack item;
 	protected Map lineBuffer = new HashMap();
-	private int id;
+	private int freq;
 
-	public GuiPDA(int id, EntityPlayer ply) {
-		this.id = id;
-		this.player = ply;
-		this.pda = (ObjectPDA) CCPortable.allPDAs.get(id);
+	public GuiPDA(int freq, ItemStack iS) {
+		this.freq = freq;
+		this.item = iS;
+		this.pda = (PDAFrequency) CCPortable.getFreq(freq);
 	}
 
 	/**
@@ -47,11 +48,9 @@ public class GuiPDA extends GuiScreen {
 		int i = 0;
 		int k = 0;
 		try {
-			i = width / 2 - (this.pda.textureX / 2);
-			k = height / 2 - (this.pda.textureY / 2);
+			i = width / 2 - (187 / 2);
+			k = height / 2 - ((((ItemPDA) this.item.getItem()).ddouble ? 128 : 256) / 2);
 		} catch (Exception e) {}
-		controlList
-				.add(new GuiButton(2, i + 35, k + 239, 60, 14, "Disconnect"));
 		this.startXPos = i;
 		this.startYPos = k;
 		this.doEvent("pda_open", new Object[] {});
@@ -66,21 +65,21 @@ public class GuiPDA extends GuiScreen {
 
 		String texture = "";
 		try {
-			texture = this.pda.texture;
+			texture = (((ItemPDA) this.item.getItem()).ddouble ? "CCPortable/pda1.png" : "CCPortable/pda1.png");
 		} catch (Exception e) {
 		}
 		this.mc.renderEngine.bindTexture(this.mc.renderEngine
 				.getTexture(texture));
-		this.drawTexturedModalRect(this.startXPos, this.startYPos, 0, 0, 187,
+		this.drawTexturedModalRect(this.startXPos, this.startYPos, 0, (((ItemPDA) this.item.getItem()).ddouble ? 0 : 128), 187,
 				256);
-		if (!this.checkChanges()) {
+		/*if (!this.checkChanges()) {
 			for (int i = 0; i < this.pda.lineNumber; i++) {
 				String line = (String) this.lineBuffer.get(i);
 				int startX = this.startXPos + this.pda.offX;
 				int startY = this.startYPos + this.pda.offY + i * 10;
 				this.fontRenderer.drawString(line, startX, startY, 0xFFFFFF);
 			}
-		}
+		}*/
 	}
 
 	/**
@@ -114,9 +113,8 @@ public class GuiPDA extends GuiScreen {
 
 	public void doEvent(String name, Object[] args) {
 		try {
-			int rID = this.pda.receiver;
-			Object receiver = CCPortable.allReceivers.get(rID);
-			if (receiver != null) {
+			int rID = this.freq;
+			if (CCPortable.getFreq(rID) != null) {
 				CCPortable.doEvent(rID, name, args);
 			}
 		} catch (Exception e) {
@@ -135,8 +133,8 @@ public class GuiPDA extends GuiScreen {
 		Map nbtl = new HashMap();
 		int num = 0;
 		try {
-			nbtl = ((ObjectPDA) CCPortable.allPDAs.get(this.id)).lines;
-			num = this.pda.lineNumber;
+			nbtl = ((PDAFrequency) CCPortable.getFreq(this.freq)).lines;
+			num = 21;
 		} catch (Exception e) {}
 		boolean right = false;
 		for (int i = 0; i < num; i++) {

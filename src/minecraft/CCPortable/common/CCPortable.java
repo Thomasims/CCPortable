@@ -27,9 +27,7 @@ import java.util.*;
 @Mod(modid = "CCPortable", name = "CCPortable", version = "0.3", dependencies = "required-after:ComputerCraft;after:CCTurtle")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {"CCPortable" }, packetHandler = PacketHandler.class)
 public class CCPortable {
-	public static Map allPDAs = new HashMap();
-	public static Map allReceivers = new HashMap();
-	public static Map allPLYs = new HashMap();
+	public static Map allFreq = new HashMap();
 	public static int lastPDA = 0;
 	public static int lastREC = 0;
 	static EnumToolMaterial pdaMaterial = EnumHelper.addToolMaterial("pdaMaterial", 0, -1, 2F, 2, 14);
@@ -77,12 +75,12 @@ public class CCPortable {
 				new Object[] { " R ", "IGI", " R ", 'R', Item.redstone, 'I',
 						Item.ingotIron, 'G', Item.ingotGold });
 
-		pdaItem = (new ItemPDA(PDAID)).setIconIndex(16).setItemName("pdaItem");
+		/*pdaItem = (new ItemPDA(PDAID)).setIconIndex(16).setItemName("pdaItem");
 		LanguageRegistry.addName(pdaItem, "PDA");
 		GameRegistry.addRecipe(new ItemStack(CCPortable.pdaItem), new Object[] {
 				" X ", "ITI", "BPB", 'X', Block.torchRedstoneActive, 'I',
 				Item.ingotIron, 'T', CCPortable.touchScreen, 'B',
-				Block.stoneButton, 'P', CCPortable.pdaBattery });
+				Block.stoneButton, 'P', CCPortable.pdaBattery });*/
 
 		receiverBlock = new BlockReceiver(ReceiverID, 0, Material.rock)
 				.setStepSound(Block.soundStoneFootstep).setHardness(5F)
@@ -98,33 +96,17 @@ public class CCPortable {
 		proxy.registerRenderThings();
 	}
 
-	public static boolean check(int id, boolean pda) {
-		if (pda) {
-			return (allPDAs.get(id) != null);
-		} else {
-			return (allReceivers.get(id) != null);
-		}
-	}
-
-	public static int createPDA(ObjectPDA inte, EntityPlayer ply) {
-		allPDAs.put(lastPDA, inte);
-			ObjectPDA pda = (ObjectPDA) allPDAs.get(lastPDA);
-			pda.id = lastPDA;
-			allPDAs.put(lastPDA, pda);
-		allPLYs.put(lastPDA, ply.username);
-		lastPDA++;
-		return lastPDA - 1;
-	}
-
-	public static int createReceiver(TileEntityPDA rec) {
-		allReceivers.put(lastREC, rec);
-		lastREC++;
-		return lastREC - 1;
-	}
-
 	public static void doEvent(int id, String name, Object[] args) {
-		ObjectPDA item = (ObjectPDA) allPDAs.get(id);
+		PDAFrequency item = (PDAFrequency) allFreq.get(id);
 	    item.doEvent(name, args);
-		allPDAs.put(id, item);
+		allFreq.put(id, item);
+	}
+
+	public static PDAFrequency getFreq(int freq) {
+		return (PDAFrequency) allFreq.get(freq);
+	}
+	
+	public static void setFreq(int freq, PDAFrequency frequ) {
+		allFreq.put(frequ, frequ);
 	}
 }

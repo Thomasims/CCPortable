@@ -32,7 +32,6 @@ public class BlockReceiver extends Block
     public TileEntity createTileEntity(World world, int metadata)
     {
     	TileEntityPDA tP = new TileEntityPDA();
-    	tP.id = CCPortable.createReceiver(tP);
     	return tP;
     }
 }

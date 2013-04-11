@@ -11,9 +11,8 @@ import net.minecraft.src.ModLoader;
 
 public class TileEntityPDA extends TileEntity implements IPeripheral {
 	public IComputerAccess computer;
-	public int id;
-	public int pda;
 	public int side = -1;
+	public int frequ;
 
 	// public static World world;
 
@@ -24,16 +23,15 @@ public class TileEntityPDA extends TileEntity implements IPeripheral {
 
 	@Override
 	public String[] getMethodNames() {
-		String[] methods = { "alert", "write", "setCursorPos", "getCursorPos", "getSize", "clear", "clearLine", "setTextColor", "steBackgroundColor", "isColor" };
+		String[] methods = { "alert", "write", "setCursorPos", "getCursorPos", "getSize", "clear", "clearLine", "setTextColor", "setBackgroundColor", "setTextColour", "setBackgroundColour", "isColor", "isColour" };
 		return methods;
 		// ME WANT TERM FUNCTIONS
 	}
 
 	@Override
-	public Object[] callMethod(IComputerAccess computer, int method,
-			Object[] arg) throws Exception {
+	public Object[] callMethod(IComputerAccess computer, int method, Object[] arg) throws Exception {
 
-		try {
+		/*try {
 		String ply = (String) CCPortable.allPLYs.get(this.pda);
 		ObjectPDA pda = (ObjectPDA) CCPortable.allPDAs.get(this.pda);
 		switch (method) {
@@ -76,7 +74,7 @@ public class TileEntityPDA extends TileEntity implements IPeripheral {
 		case 8:
 		case 9:
 		}
-		} catch (Exception e) {e.printStackTrace();}
+		} catch (Exception e) {e.printStackTrace();}*/
 		return null;
 	}
 
@@ -101,22 +99,16 @@ public class TileEntityPDA extends TileEntity implements IPeripheral {
 	}
 
 	public int getID() {
-		return this.id;
-	}
-
-	public void setPDA(int id) {
-		this.pda = id;
+		return this.frequ;
 	}
 
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		this.id = nbt.getInteger("ID");
-		this.pda = nbt.getInteger("PID");
+		this.frequ = nbt.getInteger("Frequency");
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setInteger("ID", this.id);
-		nbt.setInteger("PID", this.pda);
+		nbt.setInteger("Frequency", this.frequ);
 	}
 }
