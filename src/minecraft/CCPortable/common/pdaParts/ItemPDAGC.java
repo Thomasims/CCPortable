@@ -1,10 +1,10 @@
-package CCPortable.common;
+package CCPortable.common.pdaParts;
 
 import CCPortable.API.EnumPDAType;
 
-public class ItemPDAScreen extends ItemPDAPart {
+public class ItemPDAGC extends ItemPDAPart {
 
-	public ItemPDAScreen(int i) {
+	public ItemPDAGC(int i) {
 		super(i);
 	}
 

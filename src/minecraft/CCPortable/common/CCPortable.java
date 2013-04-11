@@ -11,6 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.src.ModLoader;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.EnumHelper;
+import CCPortable.common.pdaParts.ItemPDABattery;
+import CCPortable.common.pdaParts.ItemPDAScreen;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;

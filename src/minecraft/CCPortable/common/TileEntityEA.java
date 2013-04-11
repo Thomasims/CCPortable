@@ -37,7 +37,7 @@ public class TileEntityEA extends TileEntity implements IInventory {
 					return true;
 				}
 				return false;
-			} else if (((IPDAPart) part).getPDAType() == EnumPDAType.motherBoard && slot == 13) {
+			} else if (((IPDAPart) part).getPDAType() == EnumPDAType.MotherBoard && slot == 13) {
 				states[1] = ((IPDAPart) part).getTier() == 3
 						&& inventory[4] != null;
 				states[3] = ((IPDAPart) part).getTier() == 3
@@ -49,7 +49,7 @@ public class TileEntityEA extends TileEntity implements IInventory {
 				states[11] = true;
 				states[12] = ((IPDAPart) part).getTier() == 3;
 				states[14] = true;
-			} else if (((IPDAPart) part).getPDAType() == EnumPDAType.pivot && (slot == 6 || slot == 8)) {
+			} else if (((IPDAPart) part).getPDAType() == EnumPDAType.Pivot && (slot == 6 || slot == 8)) {
 				if (inventory[6] != null && slot == 8) {
 					states[4] = true;
 					return true;

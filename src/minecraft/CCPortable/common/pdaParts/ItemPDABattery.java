@@ -1,4 +1,4 @@
-package CCPortable.common;
+package CCPortable.common.pdaParts;
 
 import CCPortable.API.EnumPDAType;
 import CCPortable.API.IPDAPart;

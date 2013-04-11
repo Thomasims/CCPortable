@@ -1,10 +1,10 @@
-package CCPortable.common;
+package CCPortable.common.pdaParts;
 
 import CCPortable.API.EnumPDAType;
 
-public class ItemPDAGC extends ItemPDAPart {
+public class ItemPDAPivot extends ItemPDAPart {
 
-	public ItemPDAGC(int i) {
+	public ItemPDAPivot(int i) {
 		super(i);
 	}
 
