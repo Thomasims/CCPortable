@@ -61,14 +61,14 @@ public class CCPortable {
 
 	@Init
 	public void load(FMLInitializationEvent event) {
-		touchScreen = (new ItemPDAPart(TouchScreenID)).setIconIndex(17)
+		touchScreen = (new ItemPDAScreen(TouchScreenID)).setIconIndex(17)
 				.setItemName("touchScreen");
 		LanguageRegistry.addName(touchScreen, "TouchScreen");
 		GameRegistry.addRecipe(new ItemStack(CCPortable.touchScreen),
 				new Object[] { "XXX", "SDS", " R ", 'X', Block.glass, 'S',
 						Block.stone, 'D', Item.diamond, 'R', Item.redstone });
 
-		pdaBattery = (new ItemPDAPart(PDABatteryID)).setIconIndex(18)
+		pdaBattery = (new ItemPDABattery(PDABatteryID)).setIconIndex(18)
 				.setItemName("PDABattery");
 		LanguageRegistry.addName(pdaBattery, "PDA Battery");
 		GameRegistry.addRecipe(new ItemStack(CCPortable.pdaBattery),
